@@ -51,7 +51,7 @@ const nav = [
       </div>
     </dl>
 
-    <a class="scroll mono" href="#about">&lt;scroll down&gt;</a>
+    <a class="scroll mono" href="#about" aria-label="Scroll down">&lt;scroll down&gt;</a>
   </header>
 
   <main>
@@ -94,15 +94,17 @@ const nav = [
     <section class="section section--invert" id="venue" aria-labelledby="venue-h">
       <h2 class="section__label mono" id="venue-h">when &amp; where</h2>
       <div>
-        <p class="display venue__name">{meeting.venue.name},<br />{meeting.venue.city}</p>
-        <img
-          class="venue__img"
-          src={`${base}/venue/senate-house.png`}
-          width="320"
-          height="228"
-          loading="lazy"
-          alt="Senate House: a stepped Art Deco stone tower between two long wings, seen from its forecourt"
-        />
+        <div class="venue__head">
+          <p class="display venue__name">{meeting.venue.name},<br />{meeting.venue.city}</p>
+          <img
+            class="venue__img"
+            src={`${base}/venue/senate-house.png`}
+            width="320"
+            height="228"
+            loading="lazy"
+            alt="Senate House: a stepped Art Deco stone tower between two long wings, seen from its forecourt"
+          />
+        </div>
         <div class="cols venue__cols">
           <div>
             <h3 class="h3">When</h3>
@@ -175,7 +177,21 @@ const nav = [
       <li><a href="#top">back to top</a></li>
     </ul>
   </footer>
+
+  <a class="to-top mono" href="#top" aria-label="Back to top">&lt;back to top&gt;</a>
 </Base>
+
+<script>
+  // show the back-to-top button between the hero and the footer (which has its own link)
+  const btn = document.querySelector('.to-top')!;
+  const inView = new Map<Element, boolean>();
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => inView.set(e.target, e.isIntersecting));
+    btn.classList.toggle('is-visible', ![...inView.values()].some(Boolean));
+  });
+  io.observe(document.querySelector('.hero')!);
+  io.observe(document.querySelector('.footer')!);
+</script>
 
 <style>
   /* Hero */
@@ -305,17 +321,20 @@ const nav = [
   }
 
   /* Venue */
+  .venue__head {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    margin-bottom: clamp(2.5rem, 6vw, 5rem);
+  }
   .venue__name {
     font-size: var(--t-xl);
-    margin-bottom: clamp(2rem, 4vw, 3.5rem);
     overflow-wrap: anywhere;
   }
   .venue__img {
-    /* 1-bit image: scale up only, ideally by whole multiples (3x at max) */
+    /* 1-bit image: scale up only (3x at max) */
     width: min(100%, 960px);
     height: auto;
     image-rendering: pixelated;
-    margin-bottom: clamp(2.5rem, 6vw, 5rem);
   }
   .venue__travel {
     margin-top: 2rem;
@@ -378,6 +397,39 @@ const nav = [
     .people li > :empty {
       display: block;
     }
+  }
+
+  /* Floating back-to-top: solid so it reads over images and both section colours */
+  .to-top {
+    position: fixed;
+    right: var(--gutter);
+    bottom: var(--gutter);
+    z-index: 20;
+    padding: 0.75rem 1rem;
+    background: var(--ink);
+    color: var(--paper);
+    border: 1px solid var(--paper);
+    text-decoration: none;
+    opacity: 0;
+    visibility: hidden;
+    translate: 0 0.5rem;
+    transition:
+      opacity 0.2s,
+      translate 0.2s,
+      visibility 0s 0.2s;
+  }
+  .to-top.is-visible {
+    opacity: 1;
+    visibility: visible;
+    translate: 0 0;
+    transition:
+      opacity 0.2s,
+      translate 0.2s;
+  }
+  .to-top:hover {
+    background: var(--paper);
+    color: var(--ink);
+    border-color: var(--ink);
   }
 
   /* Footer */
