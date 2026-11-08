@@ -1,0 +1,398 @@
+---
+import Base from '../layouts/Base.astro';
+import Galaxy from '../components/Galaxy.astro';
+import Archive from '../components/Archive.astro';
+import { meeting, topics, keyDates, loc, links } from '../data/meeting';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const description = `The fourth meeting on simulation-based inference for galaxy evolution. ${meeting.dates}, ${meeting.venue.name}, ${meeting.venue.city}. Hosted by ${meeting.host.name}.`;
+
+const nav = [
+  ['about', '#about'],
+  ['venue', '#venue'],
+  ['dates', '#dates'],
+  ['people', '#people'],
+  ['archive', '#archive'],
+];
+---
+
+<Base title={meeting.title} description={description}>
+  <header class="hero" id="top">
+    <nav class="nav mono" aria-label="Sections">
+      <a class="brand" href="#top">sbi4galev/2027</a>
+      <ul>
+        {nav.map(([label, href]) => <li><a href={href}>{label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="stage">
+      <Galaxy class="hero-galaxy" />
+      <h1 class="display wordmark">
+        <span>SBI for</span>
+        <span>Galaxy</span>
+        <span>Evolution</span>
+        <span>2027</span>
+      </h1>
+    </div>
+
+    <dl class="facts mono">
+      <div>
+        <dt class="muted">when</dt>
+        <dd>{meeting.dates}</dd>
+      </div>
+      <div>
+        <dt class="muted">where</dt>
+        <dd>{meeting.venue.name}, {meeting.venue.city}</dd>
+      </div>
+      <div>
+        <dt class="muted">host</dt>
+        <dd><a href={meeting.host.url}>{meeting.host.name}</a></dd>
+      </div>
+    </dl>
+
+    <a class="scroll mono" href="#about">&lt;scroll down&gt;</a>
+  </header>
+
+  <main>
+    <section class="section" id="about" aria-labelledby="about-h">
+      <h2 class="section__label mono" id="about-h">about</h2>
+      <div class="about">
+        <p class="lead">
+          Simulation-based inference and other accelerated inference methods are now widely used across astrophysics. Galaxy evolution offers unique
+          opportunities, as well as novel challenges.
+        </p>
+        <div class="about__text">
+          <p>
+            Simulation-based inference (SBI), also known as implicit or likelihood-free inference (see <a
+              href={links.cranmer}>Cranmer et al. 2020</a
+      >), allows us to perform Bayesian inference directly from expensive numerical simulations, and is particularly powerful when the likelihood is intractable.
+          </p>
+          <p>
+            Following meetings in 2024, 2025 and 2026, we are again bringing together SBI experts and galaxy
+            evolution researchers to discuss the problems and solutions in applying these methods. SBI4GALEV is a small,
+            focused meeting, with plenty of time for discussion and practical sessions.
+          </p>
+        </div>
+
+        <div class="topics">
+          <h3 class="mono muted">Topics from previous meetings</h3>
+          <div class="cols">
+            {
+              topics.map((t) => (
+                <div>
+                  <h4 class="h3">{t.title}</h4>
+                  <p class="muted">{t.text}</p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--invert" id="venue" aria-labelledby="venue-h">
+      <h2 class="section__label mono" id="venue-h">when &amp; where</h2>
+      <div>
+        <p class="display venue__name">{meeting.venue.name},<br />{meeting.venue.city}</p>
+        <img
+          class="venue__img"
+          src={`${base}/venue/senate-house.png`}
+          width="320"
+          height="228"
+          loading="lazy"
+          alt="Senate House: a stepped Art Deco stone tower between two long wings, seen from its forecourt"
+        />
+        <div class="cols venue__cols">
+          <div>
+            <h3 class="h3">When</h3>
+            <p>{meeting.dates}<br />{meeting.days}</p>
+          </div>
+          <div>
+            <h3 class="h3">Where</h3>
+            <p>
+              {meeting.venue.name}<br />
+              {meeting.venue.address.map((l) => <>{l}<br /></>)}
+              <a href={meeting.venue.map}>Open in maps</a>
+            </p>
+          </div>
+          <div>
+            <h3 class="h3">Host</h3>
+            <p><a href={meeting.host.url}>{meeting.host.name}</a></p>
+          </div>
+        </div>
+        <p class="venue__travel muted">{meeting.venue.travel}</p>
+      </div>
+    </section>
+
+    <section class="section" id="dates" aria-labelledby="dates-h">
+      <h2 class="section__label mono" id="dates-h">key dates</h2>
+      <ol class="dates">
+        {
+          keyDates.map((d) => (
+            <li>
+              <span>{d.what}</span>
+              <span class:list={['when', { muted: !d.when }]}>{d.when ?? 'To be announced'}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="section" id="people" aria-labelledby="people-h">
+      <h2 class="section__label mono" id="people-h">people</h2>
+      <div>
+        <h3 class="h3">Local organising committee</h3>
+        <ul class="people">
+          {
+            loc.map((p) => (
+              <li>
+                <span class="person">{p.url ? <a href={p.url}>{p.name}</a> : p.name}</span>
+                <span class="mono">{p.role}</span>
+                <span class="mono muted">
+                  {p.affiliationUrl ? <a href={p.affiliationUrl}>{p.affiliation}</a> : p.affiliation}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section--wide" id="archive" aria-labelledby="archive-h">
+      <h2 class="section__label mono" id="archive-h">previous meetings</h2>
+      <Archive />
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>
+      All participants are expected to follow the meeting <a href={links.conduct}>code of conduct</a>.
+    </p>
+    <ul class="mono">
+      <li><a href={links.series}>series website</a></li>
+      <li><a href={links.github}>github</a></li>
+      <li><a href="#top">back to top</a></li>
+    </ul>
+  </footer>
+</Base>
+
+<style>
+  /* Hero */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    padding: 0 var(--gutter);
+  }
+
+  .nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    padding-block: 1.25rem;
+    position: relative;
+    z-index: 2;
+  }
+  .nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5rem;
+  }
+  .nav a {
+    text-decoration: none;
+  }
+  .nav a:hover {
+    text-decoration: underline;
+  }
+
+  .stage {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding-block: 2rem;
+  }
+
+  :global(.hero-galaxy) {
+    position: absolute;
+    z-index: 0;
+    right: -5%;
+    bottom: -6%;
+    width: min(60vw, 105vh);
+    aspect-ratio: 16 / 10;
+  }
+
+  .wordmark {
+    position: relative;
+    z-index: 1;
+    mix-blend-mode: difference;
+    color: var(--paper);
+    /* sized so EVOLUTION spans the content width */
+    font-size: calc((100vw - 2 * var(--gutter)) / 7.75);
+  }
+  .wordmark span {
+    display: block;
+  }
+
+  .facts {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem var(--gutter);
+    padding-block: 1.5rem 4rem;
+  }
+  .facts dd {
+    margin: 0;
+  }
+
+  .scroll {
+    position: absolute;
+    left: 50%;
+    bottom: 1.25rem;
+    translate: -50% 0;
+    text-decoration: none;
+    color: var(--grey);
+  }
+  .scroll:hover {
+    color: var(--paper);
+  }
+
+  @media (min-width: 900px) {
+    .facts {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 699px) {
+    .stage {
+      align-items: flex-start;
+      min-height: 32rem;
+    }
+    :global(.hero-galaxy) {
+      right: -30%;
+      width: 140vw;
+    }
+  }
+
+  /* About */
+  .about {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3.5rem);
+  }
+  .lead {
+    font-size: var(--t-lead);
+    font-stretch: 112%;
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    max-width: 24em;
+  }
+  .about__text {
+    display: grid;
+    gap: 1rem;
+    max-width: 38rem;
+  }
+  .topics {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  /* Venue */
+  .venue__name {
+    font-size: var(--t-xl);
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+    overflow-wrap: anywhere;
+  }
+  .venue__img {
+    /* 1-bit image: scale up only, ideally by whole multiples (3x at max) */
+    width: min(100%, 960px);
+    height: auto;
+    image-rendering: pixelated;
+    margin-bottom: clamp(2.5rem, 6vw, 5rem);
+  }
+  .venue__travel {
+    margin-top: 2rem;
+    max-width: 38rem;
+  }
+
+  /* Key dates */
+  .dates {
+    border-top: 1px solid var(--rule);
+  }
+  .dates li {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem 2rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: clamp(1.25rem, 1rem + 1.4vw, 2.25rem);
+    font-stretch: 112%;
+    font-weight: 500;
+    line-height: 1.15;
+  }
+  .dates li:last-child {
+    font-weight: 800;
+    font-stretch: 125%;
+  }
+
+  /* People */
+  .people {
+    margin-top: 1rem;
+    border-top: 1px solid var(--rule);
+  }
+  .people li {
+    display: grid;
+    gap: 0.25rem 2rem;
+    padding-block: 0.9rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .people li > :empty {
+    display: none;
+  }
+  .person {
+    font-size: var(--t-h3);
+    font-stretch: 125%;
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+  .person a {
+    text-decoration: none;
+  }
+  .person a:hover {
+    text-decoration: underline;
+  }
+  @media (min-width: 900px) {
+    .people li {
+      grid-template-columns: minmax(0, 1fr) 5rem minmax(0, 1fr);
+      align-items: baseline;
+    }
+    .people li > :empty {
+      display: block;
+    }
+  }
+
+  /* Footer */
+  .footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem 2rem;
+    padding: 3rem var(--gutter) 2.5rem;
+    border-top: 1px solid var(--rule);
+  }
+  .footer ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5rem;
+  }
+</style>

@@ -1,0 +1,146 @@
+---
+import { archive } from '../data/meeting';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<ol class="archive">
+  {
+    archive.map((m) => {
+      const Tag = m.url ? 'a' : 'div';
+      return (
+        <li>
+          <Tag
+            class="row"
+            href={m.url}
+            data-photo={m.photo && `${base}/${m.photo}`}
+            aria-current={m.url ? undefined : 'page'}
+          >
+            <span class="mono n">{pad(m.n)}</span>
+            <span class="title">
+              <span class="year">{m.year}</span> <span class="city">{m.city}</span>
+            </span>
+            <span class="mono meta">
+              {m.dates}
+              {!m.url && ' (this meeting)'}
+              <br />
+              {m.venue}
+              {m.host && (
+                <>
+                  , hosted by the <a href={m.host.url}>{m.host.name}</a>
+                </>
+              )}
+            </span>
+          </Tag>
+        </li>
+      );
+    })
+  }
+</ol>
+
+<div class="preview" hidden aria-hidden="true"><img alt="" /></div>
+
+<script>
+  const fine = matchMedia('(hover: hover) and (pointer: fine)');
+  const preview = document.querySelector<HTMLElement>('.preview')!;
+  const img = preview.querySelector('img')!;
+
+  const place = (e: PointerEvent) => {
+    const w = preview.offsetWidth, h = preview.offsetHeight;
+    const x = e.clientX + 24 + w > innerWidth ? e.clientX - 24 - w : e.clientX + 24;
+    const y = Math.min(Math.max(8, e.clientY - h / 2), innerHeight - h - 8);
+    preview.style.transform = `translate(${x}px, ${y}px)`;
+  };
+
+  document.querySelectorAll<HTMLElement>('.archive .row[data-photo]').forEach((row) => {
+    row.addEventListener('pointerenter', (e) => {
+      if (!fine.matches) return;
+      img.src = row.dataset.photo!;
+      preview.hidden = false;
+      place(e);
+    });
+    row.addEventListener('pointermove', (e) => fine.matches && place(e));
+    row.addEventListener('pointerleave', () => (preview.hidden = true));
+  });
+</script>
+
+<style>
+  .archive {
+    border-top: 1px solid var(--rule);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    grid-template-areas:
+      'n title'
+      'n meta';
+    align-items: baseline;
+    gap: 0.25rem 1rem;
+    padding: 1.1rem 0.5rem;
+    border-bottom: 1px solid var(--rule);
+    text-decoration: none;
+  }
+
+  a.row:hover,
+  a.row:focus-visible {
+    background: var(--paper);
+    color: var(--ink);
+    outline: none;
+  }
+
+  .n {
+    grid-area: n;
+    color: var(--grey);
+  }
+  a.row:hover .n,
+  a.row:focus-visible .n {
+    color: var(--ink);
+  }
+
+  .title {
+    grid-area: title;
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0.3em;
+    font-size: clamp(1.75rem, 1rem + 4vw, 4.5rem);
+    font-stretch: 125%;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .city {
+    font-weight: 200;
+  }
+
+  .meta {
+    grid-area: meta;
+  }
+
+  @media (min-width: 900px) {
+    .row {
+      grid-template-columns: 3rem minmax(0, 1fr) 16rem;
+      grid-template-areas: 'n title meta';
+      padding-block: 1.4rem;
+    }
+  }
+
+  .preview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 400px; /* = dithered image width, so pixels stay 1:1 */
+    pointer-events: none;
+    outline: 1px solid var(--ink);
+  }
+  .preview[hidden] {
+    display: none;
+  }
+  .preview img {
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+  }
+</style>
