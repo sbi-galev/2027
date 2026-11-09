@@ -3,7 +3,7 @@
 Archive previews (Floyd-Steinberg, 400px = .preview width):
     python scripts/dither.py IN.jpg ... --out public/archive
 Venue image (Bayer, sky removed):
-    python scripts/dither.py senate-house.png --out public/venue --width 320 --bayer --gamma 1.8 --sky
+    python scripts/dither.py senate-house.png --out public/venue --width 640 --bayer --gamma 1.8 --sky
 """
 
 import argparse

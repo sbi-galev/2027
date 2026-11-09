@@ -91,20 +91,18 @@ const nav = [
       </div>
     </section>
 
-    <section class="section section--invert" id="venue" aria-labelledby="venue-h">
+    <section class="section section--invert venue" id="venue" aria-labelledby="venue-h">
+      <img
+        class="venue__img"
+        src={`${base}/venue/senate-house.png`}
+        width="640"
+        height="457"
+        loading="lazy"
+        alt="Senate House: a stepped Art Deco stone tower between two long wings, seen from its forecourt"
+      />
       <h2 class="section__label mono" id="venue-h">when &amp; where</h2>
       <div>
-        <div class="venue__head">
-          <p class="display venue__name">{meeting.venue.name},<br />{meeting.venue.city}</p>
-          <img
-            class="venue__img"
-            src={`${base}/venue/senate-house.png`}
-            width="320"
-            height="228"
-            loading="lazy"
-            alt="Senate House: a stepped Art Deco stone tower between two long wings, seen from its forecourt"
-          />
-        </div>
+        <p class="display venue__name"><span>{meeting.venue.name},<br />{meeting.venue.city}</span></p>
         <div class="cols venue__cols">
           <div>
             <h3 class="h3">When</h3>
@@ -123,7 +121,7 @@ const nav = [
             <p><a href={meeting.host.url}>{meeting.host.name}</a></p>
           </div>
         </div>
-        <p class="venue__travel muted">{meeting.venue.travel}</p>
+        <p class="venue__travel">{meeting.venue.travel}</p>
       </div>
     </section>
 
@@ -144,7 +142,7 @@ const nav = [
     <section class="section" id="people" aria-labelledby="people-h">
       <h2 class="section__label mono" id="people-h">people</h2>
       <div>
-        <h3 class="h3">Local organising committee</h3>
+        <h3 class="h3">Organising committee</h3>
         <ul class="people">
           {
             loc.map((p) => (
@@ -320,24 +318,49 @@ const nav = [
     margin-top: 1rem;
   }
 
-  /* Venue */
-  .venue__head {
-    display: grid;
-    gap: clamp(2rem, 4vw, 3.5rem);
-    margin-bottom: clamp(2.5rem, 6vw, 5rem);
+  /* Venue: full-bleed 1-bit image behind white text panels */
+  .venue {
+    --veil: var(--paper);
+    position: relative;
+    isolation: isolate;
+    min-height: 71.5vw; /* image aspect: whole photo at full width */
+  }
+  .venue__img {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: pixelated;
+  }
+  .venue .section__label {
+    justify-self: start;
+    align-self: start;
+    padding: 0.2rem 0.5rem;
+    background: var(--veil);
+    color: var(--ink);
   }
   .venue__name {
     font-size: var(--t-xl);
+    line-height: 1.15; /* highlight bars just clear each other */
     overflow-wrap: anywhere;
+    margin-bottom: clamp(2.5rem, 6vw, 5rem);
   }
-  .venue__img {
-    /* 1-bit image: scale up only (3x at max) */
-    width: min(100%, 960px);
-    height: auto;
-    image-rendering: pixelated;
+  .venue__name span {
+    padding: 0 0.12em;
+    background: var(--veil);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  .venue__cols > div,
+  .venue__travel {
+    padding: 1rem 1.25rem;
+    background: var(--veil);
   }
   .venue__travel {
-    margin-top: 2rem;
+    margin-top: var(--gutter);
     max-width: 38rem;
   }
 

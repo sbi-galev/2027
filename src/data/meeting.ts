@@ -14,7 +14,7 @@ export const meeting = {
       'Russell Square and Goodge Street Underground stations are a few minutes’ walk away. Euston and King’s Cross St Pancras (for Eurostar) are around 15–20 minutes on foot.',
   },
   host: {
-    name: 'Department of Physics, Royal Holloway, University of London',
+    name: 'Department of Physical Sciences and Engineering, Royal Holloway, University of London',
     url: 'https://www.royalholloway.ac.uk/research-and-education/subjects/physics-and-astronomy/',
   },
 };
@@ -36,14 +36,14 @@ export const topics = [
 
 // `when: null` renders as "To be announced".
 export const keyDates: { what: string; when: string | null }[] = [
-  { what: 'Abstract submission opens', when: null },
-  { what: 'Abstract deadline', when: null },
-  { what: 'Registration opens', when: null },
-  { what: 'Registration closes', when: null },
+  { what: 'Abstract submission opens', when: '4 January 2027' },
+  { what: 'Abstract deadline', when: '26 March 2027' },
+  { what: 'Registration opens', when: '19 April 2027' },
+  { what: 'Registration closes', when: '6 June 2027' },
   { what: 'Meeting', when: meeting.dates },
 ];
 
-const rhul = { name: 'Department of Physics, Royal Holloway', url: meeting.host.url };
+const rhul = { name: meeting.host.name, url: meeting.host.url };
 
 export const loc: { name: string; role?: string; affiliation?: string; affiliationUrl?: string; url?: string }[] = [
   { name: 'Chris Lovell', role: 'Chair', affiliation: 'University of Cambridge', url: 'https://www.christopherlovell.co.uk/' },
