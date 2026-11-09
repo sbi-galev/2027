@@ -58,18 +58,9 @@ export const archive: {
   city: string;
   dates: string;
   venue: string;
-  host?: { name: string; url: string };
-  url?: string;
+  url: string;
   photo?: string;
 }[] = [
-  {
-    n: 4,
-    year: 2027,
-    city: 'London',
-    dates: '6–9 July',
-    venue: 'Senate House',
-    host: rhul,
-  },
   {
     n: 3,
     year: 2026,

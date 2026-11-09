@@ -7,35 +7,21 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
 <ol class="archive">
   {
-    archive.map((m) => {
-      const Tag = m.url ? 'a' : 'div';
-      return (
-        <li>
-          <Tag
-            class="row"
-            href={m.url}
-            data-photo={m.photo && `${base}/${m.photo}`}
-            aria-current={m.url ? undefined : 'page'}
-          >
-            <span class="mono n">{pad(m.n)}</span>
-            <span class="title">
-              <span class="year">{m.year}</span> <span class="city">{m.city}</span>
-            </span>
-            <span class="mono meta">
-              {m.dates}
-              {!m.url && ' (this meeting)'}
-              <br />
-              {m.venue}
-              {m.host && (
-                <>
-                  , hosted by the <a href={m.host.url}>{m.host.name}</a>
-                </>
-              )}
-            </span>
-          </Tag>
-        </li>
-      );
-    })
+    archive.map((m) => (
+      <li>
+        <a class="row" href={m.url} data-photo={m.photo && `${base}/${m.photo}`}>
+          <span class="mono n">{pad(m.n)}</span>
+          <span class="title">
+            <span class="year">{m.year}</span> <span class="city">{m.city}</span>
+          </span>
+          <span class="mono meta">
+            {m.dates}
+            <br />
+            {m.venue}
+          </span>
+        </a>
+      </li>
+    ))
   }
 </ol>
 
