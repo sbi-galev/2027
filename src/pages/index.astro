@@ -189,6 +189,27 @@ const nav = [
   });
   io.observe(document.querySelector('.hero')!);
   io.observe(document.querySelector('.footer')!);
+
+  // arrow keys step between section tops
+  const stops = [...document.querySelectorAll<HTMLElement>('.hero, main > section')];
+  let target: number | null = null; // pending smooth-scroll destination, so repeated presses keep advancing
+  const reset = () => (target = null);
+  addEventListener('wheel', reset, { passive: true });
+  addEventListener('touchstart', reset, { passive: true });
+  addEventListener('scroll', () => target !== null && Math.abs(scrollY - target) < 2 && reset(), { passive: true });
+  addEventListener('keydown', (e) => {
+    const dir = ({ ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 } as Record<string, number>)[e.key];
+    if (!dir || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    if ((e.target as Element).closest('input, textarea, select, [contenteditable]')) return;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    const from = target ?? scrollY;
+    const tops = stops.map((s) => Math.min(max, Math.round(s.getBoundingClientRect().top + scrollY)));
+    let to = dir > 0 ? tops.find((t) => t > from + 1) : tops.findLast((t) => t < from - 1);
+    if (to === undefined) return; // past the last stop: normal scrolling
+    e.preventDefault();
+    target = Math.round(to);
+    scrollTo({ top: target }); // smooth via CSS unless reduced motion
+  });
 </script>
 
 <style>
